@@ -47,29 +47,32 @@ Entry.Expansion_Weather.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
-                dropdownSync: 'weather',
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getSubLocation(isPython = false) {
+        getSubLocation(targetIndex = 0, isPython = false) {
             const param = {
                 type: 'DropdownDynamic',
                 value: null,
-                menuName() {
-                    const value = this.getTargetValue('weather');
-                    if (!value) {
-                        return [[Lang.Blocks.no_target, 'null']];
+                menuName(value) {
+                    if (value) {
+                        return getCityOptions(value);
                     }
-                    return getCityOptions(value);
+
+                    if (this._contents.options) {
+                        return this._contents.options;
+                    } else {
+                        return getCityOptions(this._block.data.params[targetIndex]);
+                    }
                 },
+                targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
-                defaultValue: (value, options) => options[0][1],
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -214,7 +217,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             params: [
                 params.getDate(),
                 params.getLocation(),
-                params.getSubLocation(),
+                params.getSubLocation(1),
                 params.getSky(),
             ],
             events: {},
@@ -265,7 +268,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getSky(true),
                         ],
                     },
@@ -276,7 +279,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getSky(true),
                         ],
                     },
@@ -287,7 +290,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getSky(true),
                         ],
                     },
@@ -298,7 +301,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getSky(true),
                         ],
                     },
@@ -309,7 +312,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getSky(true),
                         ],
                     },
@@ -320,7 +323,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getSky(true),
                         ],
                     },
@@ -331,7 +334,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getSky(true),
                         ],
                     },
@@ -343,7 +346,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [params.getLocation(), params.getSubLocation(), params.getFineDust()],
+            params: [params.getLocation(), params.getSubLocation(0), params.getFineDust()],
             events: {},
             def: {
                 params: [params.getLocation().value, null, params.getFineDust().value],
@@ -384,7 +387,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(0, true),
                             params.getFineDust(true),
                         ],
                     },
@@ -394,7 +397,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(0, true),
                             params.getFineDust(true),
                         ],
                     },
@@ -404,7 +407,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(0, true),
                             params.getFineDust(true),
                         ],
                     },
@@ -414,7 +417,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(0, true),
                             params.getFineDust(true),
                         ],
                     },
@@ -429,7 +432,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             params: [
                 params.getDate(),
                 params.getLocation(),
-                params.getSubLocation(),
+                params.getSubLocation(1),
                 params.getWeatherElements(),
             ],
             events: {},
@@ -479,7 +482,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getWeatherElements(true),
                         ],
                     },
@@ -490,7 +493,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getWeatherElements(true),
                         ],
                     },
@@ -501,7 +504,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getWeatherElements(true),
                         ],
                     },
@@ -512,7 +515,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getWeatherElements(true),
                         ],
                     },
@@ -523,7 +526,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getWeatherElements(true),
                         ],
                     },
@@ -534,7 +537,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         textParams: [
                             params.getDate(true),
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(1, true),
                             params.getWeatherElements(true),
                         ],
                     },
@@ -546,7 +549,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getLocation(), params.getSubLocation(), params.getNowWeatherElement()],
+            params: [params.getLocation(), params.getSubLocation(0), params.getNowWeatherElement()],
             events: {},
             def: {
                 params: [params.getLocation().value, null, params.getNowWeatherElement().value],
@@ -586,7 +589,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(0, true),
                             params.getNowWeatherElement(true),
                         ],
                     },
@@ -596,7 +599,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(0, true),
                             params.getNowWeatherElement(true),
                         ],
                     },
@@ -608,7 +611,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getLocation(), params.getSubLocation(), params.getTime()],
+            params: [params.getLocation(), params.getSubLocation(0), params.getTime()],
             events: {},
             def: {
                 params: [params.getLocation().value, null, params.getTime().value],
@@ -655,7 +658,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             params.getLocation(true),
-                            params.getSubLocation(true),
+                            params.getSubLocation(0, true),
                             params.getTime(true),
                         ],
                     },

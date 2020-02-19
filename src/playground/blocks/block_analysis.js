@@ -42,18 +42,6 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'tables',
-                        dropdownSync: 'dataTables',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.table_row, 'ROW'],
-                            [Lang.Blocks.table_col, 'COL'],
-                        ],
-                        value: 'ROW',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
@@ -66,7 +54,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null, null, null],
+                    params: [null, null],
                     type: 'append_row_to_table',
                 },
                 pyHelpDef: {
@@ -75,28 +63,19 @@ module.exports = {
                             type: 'text',
                             params: ['A&value'],
                         },
-                        {
-                            type: 'text',
-                            params: ['B&value'],
-                        },
+                        null,
                     ],
                     type: 'append_row_to_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
-                    PROPERTY: 1,
                 },
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const property = script.getStringValue('PROPERTY', script);
                     const table = DataTable.getSource(tableId, sprite);
-                    if (property === 'ROW') {
-                        table.appendRow();
-                    } else {
-                        table.appendCol();
-                    }
+                    table.appendValue();
                     return script.callReturn();
                 },
                 syntax: {
@@ -114,7 +93,6 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'tables',
-                        dropdownSync: 'dataTables',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
@@ -122,18 +100,8 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.table_row, 'ROW'],
-                            [Lang.Blocks.table_col, 'COL'],
-                        ],
-                        value: 'ROW',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -150,7 +118,6 @@ module.exports = {
                             params: ['1'],
                         },
                         null,
-                        null,
                     ],
                     type: 'insert_row_to_table',
                 },
@@ -164,30 +131,24 @@ module.exports = {
                             type: 'text',
                             params: ['A&value'],
                         },
-                        {
-                            type: 'text',
-                            params: ['C&value'],
-                        },
                         null,
                     ],
                     type: 'insert_row_to_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
-                    NUMBER: 1,
-                    PROPERTY: 2,
+                    ROW: 1,
                 },
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const number = script.getNumberValue('NUMBER', script);
-                    const property = script.getStringValue('PROPERTY', script);
+                    const row = script.getNumberValue('ROW', script);
                     const table = DataTable.getSource(tableId, sprite);
-                    if (property === 'ROW') {
-                        table.insertRow(number);
+                    if (table.isExist([row])) {
+                        table.insertValue(row);
                     } else {
-                        table.insertCol(number);
+                        throw new Error('data not exist');
                     }
                     return script.callReturn();
                 },
@@ -206,7 +167,6 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'tables',
-                        dropdownSync: 'dataTables',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
@@ -214,18 +174,8 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.table_row, 'ROW'],
-                            [Lang.Blocks.table_col, 'COL'],
-                        ],
-                        value: 'ROW',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -242,7 +192,6 @@ module.exports = {
                             params: ['1'],
                         },
                         null,
-                        null,
                     ],
                     type: 'delete_row_from_table',
                 },
@@ -256,30 +205,24 @@ module.exports = {
                             type: 'text',
                             params: ['A&value'],
                         },
-                        {
-                            type: 'text',
-                            params: ['C&value'],
-                        },
                         null,
                     ],
                     type: 'delete_row_from_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
-                    NUMBER: 1,
-                    PROPERTY: 2,
+                    ROW: 1,
                 },
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const number = script.getNumberValue('NUMBER', script);
-                    const property = script.getStringValue('PROPERTY', script);
+                    const row = script.getNumberValue('ROW', script);
                     const table = DataTable.getSource(tableId, sprite);
-                    if (property === 'ROW') {
-                        table.deleteRow(number);
+                    if (table.isExist([row])) {
+                        table.deleteValue(row);
                     } else {
-                        table.deleteCol(number);
+                        throw new Error('data not exist');
                     }
                     return script.callReturn();
                 },
@@ -298,7 +241,6 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'tables',
-                        dropdownSync: 'dataTables',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
@@ -306,13 +248,18 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
-                        blockType: 'get_table_fields',
-                        defaultType: 'number',
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: getSubMenus,
+                        targetIndex: 0,
+                        needDeepCopy: true,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                     {
                         type: 'Block',
@@ -334,7 +281,8 @@ module.exports = {
                             params: ['1'],
                         },
                         {
-                            type: 'get_table_fields',
+                            type: 'text',
+                            params: ['1'],
                         },
                         {
                             type: 'text',
@@ -368,16 +316,16 @@ module.exports = {
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
-                    NUMBER: 1,
-                    FIELD: 2,
+                    ROW: 1,
+                    COL: 2,
                     VALUE: 3,
                 },
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const row = script.getNumberValue('NUMBER', script);
-                    const col = script.getNumberValue('FIELD', script);
+                    const row = script.getNumberValue('ROW', script);
+                    const col = script.getNumberValue('COL', script);
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (table.isExist([row])) {
@@ -403,7 +351,6 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'tables',
-                        dropdownSync: 'dataTables',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
@@ -433,7 +380,7 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const property = script.getStringValue('PROPERTY', script);
+                    const property = script.getField('PROPERTY', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
                         const { array } = table;
@@ -460,7 +407,6 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'tables',
-                        dropdownSync: 'dataTables',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
@@ -468,13 +414,18 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
-                        blockType: 'get_table_fields',
-                        defaultType: 'number',
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: getSubMenus,
+                        targetIndex: 0,
+                        needDeepCopy: true,
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                 ],
                 events: {},
@@ -486,7 +437,8 @@ module.exports = {
                             params: ['1'],
                         },
                         {
-                            type: 'get_table_fields',
+                            type: 'text',
+                            params: ['1'],
                         },
                     ],
                     type: 'get_value_from_table',
@@ -524,16 +476,19 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'tables',
-                        dropdownSync: 'dataTables',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
-                        blockType: 'get_table_fields',
-                        defaultType: 'number',
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: getSubMenus,
+                        targetIndex: 0,
+                        needDeepCopy: true,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                     {
                         type: 'Dropdown',
@@ -555,7 +510,8 @@ module.exports = {
                     params: [
                         null,
                         {
-                            type: 'get_table_fields',
+                            type: 'text',
+                            params: ['1'],
                         },
                         null,
                     ],
@@ -614,7 +570,6 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'tables',
-                        dropdownSync: 'dataTables',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,

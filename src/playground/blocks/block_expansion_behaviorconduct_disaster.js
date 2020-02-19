@@ -97,27 +97,34 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
-                dropdownSync: 'disaster',
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getSubCategory(isPython = false) {
+        getSubCategory(targetIndex = 0, isPython = false) {
             const param = {
                 type: 'DropdownDynamic',
                 value: null,
-                menuName() {
-                    const value = this.getTargetValue('disaster');
-                    if (!value) {
-                        return [[Lang.Blocks.no_target, 'null']];
+                menuName(value) {
+                    if (value) {
+                        return categoryMap[value].sub.map((category) => [
+                            Lang.Blocks[`behaviorConduct${category}`],
+                            category,
+                        ]);
                     }
-                    return categoryMap[value].sub.map((category) => [
-                        Lang.Blocks[`behaviorConduct${category}`],
-                        category,
-                    ]);
+
+                    if (this._contents.options) {
+                        return this._contents.options;
+                    } else {
+                        return categoryMap[defaultCategory].sub.map((category) => [
+                            Lang.Blocks[`behaviorConduct${category}`],
+                            category,
+                        ]);
+                    }
                 },
+                targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
@@ -183,7 +190,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getCategory(), params.getSubCategory()],
+            params: [params.getCategory(), params.getSubCategory(0)],
             events: {},
             def: {
                 params: [params.getCategory().value, null],
@@ -220,7 +227,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
             statements: [],
             params: [
                 params.getCategory(),
-                params.getSubCategory(),
+                params.getSubCategory(0),
                 {
                     type: 'Block',
                     accept: 'string',

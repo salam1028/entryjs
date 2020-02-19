@@ -669,9 +669,8 @@ module.exports = {
                 class: 'terminate',
                 isNotFor: [],
                 func(sprite, script) {
-                    Entry.engine.toggleStop().then(() => {
-                        Entry.engine.toggleRun();
-                    });
+                    Entry.engine.toggleStop();
+                    Entry.engine.toggleRun();
                 },
                 syntax: { js: [], py: ['Entry.start_again()'] },
             },
